@@ -156,11 +156,23 @@ const API_URL =
 let userId = "";
 
 function toDateInputValue(date) {
-  return date.toISOString().split("T")[0];
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+function parseDateInput(value) {
+  const parts = value.split("-");
+  return new Date(
+    Number(parts[0]),
+    Number(parts[1]) - 1,
+    Number(parts[2])
+  );
 }
 
 function addDays(dateString, days) {
-  const d = new Date(dateString);
+  const d = parseDateInput(dateString);
   d.setDate(d.getDate() + days);
   return toDateInputValue(d);
 }
@@ -235,10 +247,10 @@ async function submitForm() {
     return;
   }
 
-  const nights = Math.ceil(
-    (new Date(checkoutDate) - new Date(checkinDate)) /
-    (1000 * 60 * 60 * 24)
-  );
+const nights = Math.ceil(
+  (parseDateInput(checkoutDate) - parseDateInput(checkinDate)) /
+  (1000 * 60 * 60 * 24)
+);
 
   const data = {
     userId: userId,
