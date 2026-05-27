@@ -7,218 +7,92 @@
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
 <style>
-body {
-  font-family: sans-serif;
-  background: #f7f7f7;
-  margin: 0;
-  padding: 24px;
-  color: #111;
-}
-
-.container {
-  max-width: 480px;
-  margin: auto;
-}
-
-h1 {
-  color: #06C755;
-  font-size: 42px;
-  margin-bottom: 8px;
-  line-height: 1.05;
-}
-
-.subtitle {
-  font-size: 18px;
-  color: #666;
-  margin-bottom: 36px;
-}
-
-label {
-  display: block;
-  font-size: 18px;
-  font-weight: 700;
-  margin-top: 22px;
-  margin-bottom: 10px;
-}
-
-input,
-select {
-  width: 100%;
-  height: 60px;
-  border-radius: 18px;
-  border: 2px solid #ddd;
-  padding: 0 18px;
-  font-size: 20px;
-  background: white;
-  box-sizing: border-box;
-}
-
-button {
-  width: 100%;
-  height: 62px;
-  border: none;
-  border-radius: 18px;
-  background: #06C755;
-  color: white;
-  font-size: 24px;
-  font-weight: bold;
-  margin-top: 30px;
-}
-
-#status {
-  font-size: 20px;
-  font-weight: bold;
-  margin-top: 18px;
-  color: #06C755;
-  text-align: center;
-}
-
-.note {
-  font-size: 16px;
-  color: #666;
-  margin-top: 20px;
-  line-height: 1.6;
-}
-
-#status {
-  margin-top: 24px;
-  padding: 22px 20px;
-  border-radius: 18px;
-  background: #effcf3;
-  border: 1px solid #c9edd5;
-  font-size: 21px;
-  line-height: 1.65;
-  color: #111;
-  font-weight: 700;
-}
-
-.divider {
-  display: flex;
-  align-items: center;
-  margin: 34px 0 22px;
-  color: #888;
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.divider::before,
-.divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: #ddd;
-}
-
-.divider::before {
-  margin-right: 14px;
-}
-
-.divider::after {
-  margin-left: 14px;
-}
-
-.security-box {
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-  background: #f3fbf5;
-  border-radius: 18px;
-  padding: 18px;
-  font-size: 17px;
-  line-height: 1.6;
-  color: #333;
-}
-
-.security-icon {
-  font-size: 28px;
-}
-</style>
-</head>
-
 <body>
+
 <div class="container">
-  <div class="card">
-    <h2>S’Prima Hostel</h2>
-    <p class="subtitle">เช็คห้องว่างและส่งคำขอจองห้องพัก</p>
 
-    <label>วันที่เข้าพัก</label>
-    <input type="date" id="checkinDate" required>
+  <h1>S’Prima Hostel</h1>
+  <p class="subtitle">
+    เช็คห้องว่างและส่งคำขอจองห้องพัก
+  </p>
 
-    <div class="full-width">
   <label>วันที่เข้าพัก</label>
-  <input type="date" id="checkinDate" required>
-</div>
+  <input type="date" id="checkinDate">
 
-<div>
+  <label>จำนวนห้อง</label>
+  <select id="rooms">
+    <option value="">กดเพื่อเลือกจำนวนห้อง</option>
+    <option value="1 ห้อง">1 ห้อง</option>
+    <option value="2 ห้อง">2 ห้อง</option>
+    <option value="3 ห้อง">3 ห้อง</option>
+    <option value="มากกว่า 3 ห้อง">มากกว่า 3 ห้อง</option>
+  </select>
 
-  <div>
-    <label>จำนวนห้อง</label>
-    <select id="rooms">
-      ...
-    </select>
+  <label>จำนวนคืน</label>
+  <select id="nights">
+    <option value="">กดเพื่อเลือกจำนวนคืน</option>
+    <option value="1 คืน">1 คืน</option>
+    <option value="2 คืน">2 คืน</option>
+    <option value="3 คืน">3 คืน</option>
+    <option value="มากกว่า 3 คืน">มากกว่า 3 คืน</option>
+  </select>
+
+  <label>ประเภทห้อง</label>
+  <select id="roomType">
+    <option value="">กดเพื่อเลือกประเภทห้อง</option>
+    <option value="ห้องมาตรฐาน 450 บาท">ห้องมาตรฐาน 450 บาท</option>
+    <option value="ห้อง Superior 550 บาท">ห้อง Superior 550 บาท</option>
+    <option value="ห้องใดก็ได้">ห้องใดก็ได้</option>
+  </select>
+
+  <label>เบอร์โทรศัพท์</label>
+  <input
+    type="tel"
+    id="phone"
+    placeholder="เช่น 087xxxxxxx"
+  >
+
+  <button id="submitBtn" onclick="submitForm()">
+    ส่งคำขอจอง
+  </button>
+
+  <div id="status"></div>
+
+  <div class="note">
+    หลังส่งคำขอ ทีมงานจะตรวจสอบห้องว่าง
+    และติดต่อกลับเพื่อยืนยันอีกครั้งค่ะ
   </div>
 
-  <div>
-    <label>จำนวนคืน</label>
-    <select id="nights">
-      ...
-    </select>
+  <div class="divider">
+    หมายเหตุ
   </div>
 
-</div>
+  <div class="security-box">
+    <div class="security-icon">✅</div>
 
-<div class="grid-2">
-
-  <div>
-    <label>ประเภทห้อง</label>
-    <select id="roomType">
-      ...
-    </select>
+    <div>
+      ข้อมูลของคุณจะถูกเก็บเป็นความลับ
+      และใช้เพื่อการติดต่อยืนยันการจองเท่านั้น
+    </div>
   </div>
 
-  <div>
-    <label>เบอร์โทรศัพท์</label>
-    <input type="tel" id="phone" placeholder="เช่น 087xxxxxxx">
-  </div>
-
-</div>
-
-<button onclick="submitBooking()">
-  ส่งคำขอจอง
-</button>
-
-<div id="status"></div>
-
-<div class="note">
-หลังส่งคำขอ ทีมงานจะตรวจสอบห้องว่างและติดต่อกลับเพื่อยืนยันอีกครั้งค่ะ
-</div>
-
-<div class="divider">
-หมายเหตุ
-</div>
-
-<div class="security-box">
-  <div class="security-icon">✅</div>
-  <div>
-    ข้อมูลของคุณจะถูกเก็บเป็นความลับ
-    และใช้เพื่อการติดต่อยืนยันการจองเท่านั้น
-  </div>
-</div> onclick="submitForm()">ส่งคำขอจอง</button>
-
-    <p class="note" id="note">หลังส่งคำขอ ทีมงานจะตรวจสอบห้องว่างและติดต่อกลับเพื่อยืนยันอีกครั้งค่ะ</p>
-    <p id="status"></p>
-  </div>
 </div>
 
 <script>
 const LIFF_ID = "2010199464-Ylx6zXrL";
-const API_URL = "https://script.google.com/macros/s/AKfycbwRBXDsNOME9GcqJ1gt4gPLx9z4pAxtWa0JgPXO-NnFZK_3F10AfV16S3Q8mJ9o1wjF/exec";
+
+const API_URL =
+"https://script.google.com/macros/s/AKfycbwRBXDsNOME9GcqJ1gt4gPLx9z4pAxtWa0JgPXO-NnFZK_3F10AfV16S3Q8mJ9o1wjF/exec";
 
 let userId = "";
 
 async function main() {
+
   try {
-    await liff.init({ liffId: LIFF_ID });
+
+    await liff.init({
+      liffId: LIFF_ID
+    });
 
     if (!liff.isLoggedIn()) {
       liff.login();
@@ -226,54 +100,98 @@ async function main() {
     }
 
     const profile = await liff.getProfile();
+
     userId = profile.userId || "";
 
-  } catch (err) {
+  } catch(err) {
+
     document.getElementById("status").innerText =
       "ไม่สามารถเชื่อมต่อ LINE ได้ กรุณาปิดแล้วเปิดใหม่อีกครั้งค่ะ";
+
   }
+
 }
 
 async function submitForm() {
-  const status = document.getElementById("status");
+
+  const status =
+    document.getElementById("status");
+
+  const submitBtn =
+    document.getElementById("submitBtn");
 
   const data = {
-    userId: userId || "",
-    checkinDate: document.getElementById("checkinDate").value,
-    rooms: document.getElementById("rooms").value,
-    nights: document.getElementById("nights").value,
-    roomType: document.getElementById("roomType").value,
-    phone: document.getElementById("phone").value
+
+    userId: userId,
+
+    checkinDate:
+      document.getElementById("checkinDate").value,
+
+    rooms:
+      document.getElementById("rooms").value,
+
+    nights:
+      document.getElementById("nights").value,
+
+    roomType:
+      document.getElementById("roomType").value,
+
+    phone:
+      document.getElementById("phone").value
+
   };
 
-  if (!data.checkinDate || !data.rooms || !data.nights || !data.roomType || !data.phone) {
-    status.innerText = "กรุณากรอกข้อมูลให้ครบก่อนส่งค่ะ";
+  if (
+    !data.checkinDate ||
+    !data.rooms ||
+    !data.nights ||
+    !data.roomType ||
+    !data.phone
+  ) {
+
+    status.innerText =
+      "กรุณากรอกข้อมูลให้ครบก่อนส่งค่ะ";
+
     return;
   }
 
-  status.innerText = "กำลังส่งข้อมูล กรุณารอสักครู่...";
-  document.getElementById("submitBtn").disabled = true;
+  submitBtn.disabled = true;
+
+  status.innerText =
+    "กำลังส่งข้อมูล กรุณารอสักครู่...";
 
   try {
+
     await fetch(API_URL, {
+
       method: "POST",
+
       mode: "no-cors",
+
       headers: {
         "Content-Type": "application/json"
       },
+
       body: JSON.stringify(data)
+
     });
 
-    document.getElementById("note").style.display = "none";
-    status.innerText = "ได้รับข้อมูลแล้วค่ะ ทีมงานจะตรวจสอบห้องว่างและติดต่อกลับโดยเร็วที่สุดค่ะ 😊";
+    status.innerText =
+      "ได้รับคำขอจองแล้วค่ะ 😊\nทีมงานจะตรวจสอบห้องว่างและติดต่อกลับโดยเร็วที่สุดค่ะ";
 
-  } catch (err) {
-    status.innerText = "ส่งข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้งค่ะ";
-    document.getElementById("submitBtn").disabled = false;
+  } catch(err) {
+
+    status.innerText =
+      "ส่งข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้งค่ะ";
+
+    submitBtn.disabled = false;
+
   }
+
 }
 
 main();
 </script>
+
 </body>
 </html>
