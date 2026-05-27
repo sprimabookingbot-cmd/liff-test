@@ -12,22 +12,17 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
   background: #ffffff;
   color: #111;
-  overflow-x: hidden;
 }
 
 .container {
-  width: 100%;
-  padding: 26px 22px 34px;
-  box-sizing: border-box;
-}
-
-.card {
-  width: 100%;
+  padding: 24px 20px 40px;
+  max-width: 520px;
+  margin: 0 auto;
   box-sizing: border-box;
 }
 
 h2 {
-  margin: 0 0 8px;
+  margin: 0;
   font-size: 34px;
   font-weight: 800;
   color: #06c755;
@@ -35,46 +30,62 @@ h2 {
 }
 
 .subtitle {
-  font-size: 19px;
+  margin-top: 10px;
+  margin-bottom: 34px;
+  font-size: 18px;
   line-height: 1.5;
   color: #555;
-  margin: 0 0 30px;
 }
 
 label {
   display: block;
-  font-size: 21px;
+  margin-bottom: 10px;
+  font-size: 20px;
   font-weight: 800;
-  margin: 26px 0 10px;
 }
 
 input,
 select {
   width: 100%;
   height: 64px;
-  box-sizing: border-box;
   padding: 0 18px;
+  box-sizing: border-box;
   border: 1.5px solid #d9d9d9;
-  border-radius: 16px;
-  background: #ffffff;
-  font-size: 19px;
+  border-radius: 18px;
+  background: #fff;
+  font-size: 20px;
   color: #111;
+}
+
+input::placeholder {
+  color: #aaa;
+}
+
+.full-width {
+  margin-bottom: 26px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 22px;
 }
 
 button {
   width: 100%;
   height: 68px;
-  margin-top: 30px;
   border: none;
   border-radius: 18px;
   background: #06c755;
   color: white;
   font-size: 24px;
   font-weight: 800;
+  margin-top: 10px;
 }
 
 .note {
-  margin-top: 20px;
+  margin-top: 22px;
   font-size: 16px;
   line-height: 1.6;
   color: #666;
@@ -82,14 +93,55 @@ button {
 
 #status {
   margin-top: 24px;
-  padding: 18px 16px;
-  border-radius: 16px;
-  background: #ecfff4;
-  border: 1px solid #bdeecf;
-  font-size: 20px;
-  line-height: 1.55;
+  padding: 22px 20px;
+  border-radius: 18px;
+  background: #effcf3;
+  border: 1px solid #c9edd5;
+  font-size: 21px;
+  line-height: 1.65;
   color: #111;
   font-weight: 700;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 34px 0 22px;
+  color: #888;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #ddd;
+}
+
+.divider::before {
+  margin-right: 14px;
+}
+
+.divider::after {
+  margin-left: 14px;
+}
+
+.security-box {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: #f3fbf5;
+  border-radius: 18px;
+  padding: 18px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: #333;
+}
+
+.security-icon {
+  font-size: 28px;
 }
 </style>
 </head>
@@ -103,34 +155,66 @@ button {
     <label>วันที่เข้าพัก</label>
     <input type="date" id="checkinDate" required>
 
+    <div class="full-width">
+  <label>วันที่เข้าพัก</label>
+  <input type="date" id="checkinDate" required>
+</div>
+
+<div class="grid-2">
+
+  <div>
     <label>จำนวนห้อง</label>
     <select id="rooms">
-      <option value="">กดเพื่อเลือกจำนวนห้อง</option>
-      <option value="1 ห้อง">1 ห้อง</option>
-      <option value="2 ห้อง">2 ห้อง</option>
-      <option value="3 ห้อง">3 ห้อง</option>
+      ...
     </select>
+  </div>
 
+  <div>
     <label>จำนวนคืน</label>
     <select id="nights">
-      <option value="">กดเพื่อเลือกจำนวนคืน</option>
-      <option value="1 คืน">1 คืน</option>
-      <option value="2 คืน">2 คืน</option>
-      <option value="3 คืน">3 คืน</option>
+      ...
     </select>
+  </div>
 
+</div>
+
+<div class="grid-2">
+
+  <div>
     <label>ประเภทห้อง</label>
     <select id="roomType">
-      <option value="">กดเพื่อเลือกประเภทห้อง</option>
-      <option value="ห้องมาตรฐาน 450 บาท">ห้องมาตรฐาน 450 บาท</option>
-      <option value="ห้อง Superior 550 บาท">ห้อง Superior 550 บาท</option>
-      <option value="ห้องใดก็ได้">ห้องใดก็ได้</option>
+      ...
     </select>
+  </div>
 
+  <div>
     <label>เบอร์โทรศัพท์</label>
     <input type="tel" id="phone" placeholder="เช่น 087xxxxxxx">
+  </div>
 
-    <button id="submitBtn" onclick="submitForm()">ส่งคำขอจอง</button>
+</div>
+
+<button onclick="submitBooking()">
+  ส่งคำขอจอง
+</button>
+
+<div id="status"></div>
+
+<div class="note">
+หลังส่งคำขอ ทีมงานจะตรวจสอบห้องว่างและติดต่อกลับเพื่อยืนยันอีกครั้งค่ะ
+</div>
+
+<div class="divider">
+หมายเหตุ
+</div>
+
+<div class="security-box">
+  <div class="security-icon">✅</div>
+  <div>
+    ข้อมูลของคุณจะถูกเก็บเป็นความลับ
+    และใช้เพื่อการติดต่อยืนยันการจองเท่านั้น
+  </div>
+</div> onclick="submitForm()">ส่งคำขอจอง</button>
 
     <p class="note" id="note">หลังส่งคำขอ ทีมงานจะตรวจสอบห้องว่างและติดต่อกลับเพื่อยืนยันอีกครั้งค่ะ</p>
     <p id="status"></p>
