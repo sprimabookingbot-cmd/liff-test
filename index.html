@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+
+<body style="font-size:40px">
+
+<div id="status">loading...</div>
+
+<script>
+
+const LIFF_ID = "2010199464-Ylx6zXrL";
+
+async function run() {
+
+  const s = document.getElementById("status");
+
+  try {
+
+    s.innerText = "SDK loaded";
+
+    await liff.init({
+      liffId: LIFF_ID
+    });
+
+    s.innerText = "INIT OK";
+
+    const p = await liff.getProfile();
+
+    s.innerText =
+      "SUCCESS\n\n" +
+      p.userId;
+
+  } catch(e) {
+
+    s.innerText =
+      "ERROR\n\n" +
+      e.message;
+
+  }
+
+}
+
+run();
+
+</script>
+
+</body>
+</html>
