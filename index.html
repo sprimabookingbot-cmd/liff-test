@@ -250,10 +250,11 @@ async function submitForm() {
     status.innerText =
       "ได้รับคำขอจองแล้วค่ะ 😊\nทีมงานจะตรวจสอบห้องว่างและติดต่อกลับโดยเร็วที่สุดค่ะ";
 
-  } catch(err) {
-    status.innerText = "ส่งข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้งค่ะ";
-    submitBtn.disabled = false;
-  }
+  } catch (err) {
+  status.innerText =
+    "ส่งข้อมูลไม่สำเร็จ: " + err.message;
+  submitBtn.disabled = false;
+}
 }
 
 main();
