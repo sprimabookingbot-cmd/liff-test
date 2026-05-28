@@ -301,6 +301,23 @@ function validateRoomCapacity(
 
   return true;
 }
+
+function checkExtraMattressWarning(guests, standardRooms, superiorRooms) {
+  const normalCapacity =
+    Number(standardRooms) * 2 +
+    Number(superiorRooms) * 2;
+
+  const maxCapacity =
+    Number(standardRooms) * 2 +
+    Number(superiorRooms) * 3;
+
+  if (Number(guests) > normalCapacity && Number(guests) <= maxCapacity) {
+    showStatus(
+      "หมายเหตุ: จำนวนผู้เข้าพักเกินจำนวนเตียงปกติค่ะ\n" +
+      "ห้อง Superior จะมีค่าเสริมฟูก 200 บาท / ห้อง / คืน สำหรับท่านที่ 3 ค่ะ"
+    );
+  }
+}
   
 async function submitBooking(){
   const submitBtn=document.getElementById("submitBtn");
@@ -330,6 +347,11 @@ if (checkinDate < today) {
   submitBtn.disabled = false;
   return;
 }
+  checkExtraMattressWarning(
+  guests,
+  standardRooms,
+  superiorRooms
+);
   if (!validateRoomCapacity()) {
   return;
 }
