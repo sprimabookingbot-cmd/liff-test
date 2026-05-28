@@ -200,11 +200,28 @@ async function main(){
   }
 }
 
+function displayRoomLeft(left, guests) {
+  const suggestedMax = Math.ceil(Number(guests) / 2);
+  const shown = Math.min(Number(left || 0), suggestedMax);
+
+  if (shown <= 0) {
+    return "เต็มแล้ว";
+  }
+
+  return "มีห้องว่าง";
+}
+  
 async function checkAvailability(){
   const checkBtn=document.getElementById("checkBtn");
   const checkinDate=document.getElementById("checkinDate").value;
   const checkoutDate=document.getElementById("checkoutDate").value;
   const guests=document.getElementById("guests").value;
+  const today = toDateInputValue(new Date());
+
+if (checkinDate < today) {
+  showStatus("กรุณาเลือกวันที่เข้าพักตั้งแต่วันนี้เป็นต้นไปค่ะ");
+  return;
+}
 
   if(!checkinDate || !checkoutDate || !guests){
     showStatus("กรุณาเลือกวันที่และจำนวนผู้เข้าพักค่ะ");
@@ -239,11 +256,11 @@ async function checkAvailability(){
     lastAvailability=data;
 
     document.getElementById("standardInfo").innerHTML =
-      `เหลือ ${data.standardLeft} ห้อง<br>ราคา ${data.standardPrice} บาท / ห้อง / คืน` +
+      `${displayRoomLeft(data.standardLeft, guests)}<br>ราคา ${data.standardPrice} บาท / ห้อง / คืน`
       (data.recommended==="standard" ? `<br><span class="badge">แนะนำสำหรับคุณ</span>` : "");
 
     document.getElementById("superiorInfo").innerHTML =
-      `เหลือ ${data.superiorLeft} ห้อง<br>ราคา ${data.superiorPrice} บาท / ห้อง / คืน` +
+      `${displayRoomLeft(data.superiorLeft, guests)}<br>ราคา ${data.superiorPrice} บาท / ห้อง / คืน`
       (data.recommended==="superior" ? `<br><span class="badge">แนะนำสำหรับคุณ</span>` : "");
 
     fillRoomSelect("standardRooms",data.standardLeft,"ห้องมาตรฐาน");
@@ -293,6 +310,12 @@ async function submitBooking(){
   const phone=document.getElementById("phone").value;
   const standardRooms=document.getElementById("standardRooms").value || "0";
   const superiorRooms=document.getElementById("superiorRooms").value || "0";
+  const today = toDateInputValue(new Date());
+
+if (checkinDate < today) {
+  showStatus("กรุณาเลือกวันที่เข้าพักตั้งแต่วันนี้เป็นต้นไปค่ะ");
+  return;
+}
 
   if(Number(standardRooms)===0 && Number(superiorRooms)===0){
     showStatus("กรุณาเลือกจำนวนห้องที่ต้องการค่ะ");
