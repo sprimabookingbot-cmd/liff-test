@@ -302,7 +302,11 @@ function validateRoomCapacity(
   return true;
 }
 
-function checkExtraMattressWarning(guests, standardRooms, superiorRooms) {
+function needsExtraMattress(
+  guests,
+  standardRooms,
+  superiorRooms
+) {
   const normalCapacity =
     Number(standardRooms) * 2 +
     Number(superiorRooms) * 2;
@@ -311,98 +315,114 @@ function checkExtraMattressWarning(guests, standardRooms, superiorRooms) {
     Number(standardRooms) * 2 +
     Number(superiorRooms) * 3;
 
-  if (Number(guests) > normalCapacity && Number(guests) <= maxCapacity) {
-    showStatus(
-      "หมายเหตุ: จำนวนผู้เข้าพักเกินจำนวนเตียงปกติค่ะ\n" +
-      "ห้อง Superior จะมีค่าเสริมฟูก 200 บาท / ห้อง / คืน สำหรับท่านที่ 3 ค่ะ"
-    );
-  }
+  return (
+    Number(guests) > normalCapacity &&
+    Number(guests) <= maxCapacity
+  );
 }
+
+
   
 async function submitBooking(){
-  const submitBtn=document.getElementById("submitBtn");
+  const submitBtn = document.getElementById("submitBtn");
 
-  const checkinDate=document.getElementById("checkinDate").value;
-  const checkoutDate=document.getElementById("checkoutDate").value;
-  const guests=document.getElementById("guests").value;
-  const phone=document.getElementById("phone").value;
-  const standardRooms=document.getElementById("standardRooms").value || "0";
-  const superiorRooms=document.getElementById("superiorRooms").value || "0";
+  const checkinDate = document.getElementById("checkinDate").value;
+  const checkoutDate = document.getElementById("checkoutDate").value;
+  const guests = document.getElementById("guests").value;
+  const phone = document.getElementById("phone").value;
+  const standardRooms = document.getElementById("standardRooms").value || "0";
+  const superiorRooms = document.getElementById("superiorRooms").value || "0";
+
   const today = toDateInputValue(new Date());
 
-if (checkinDate < today) {
-  showStatus("กรุณาเลือกวันที่เข้าพักตั้งแต่วันนี้เป็นต้นไปค่ะ");
-  return;
-}
+  if (checkinDate < today) {
+    showStatus("กรุณาเลือกวันที่เข้าพักตั้งแต่วันนี้เป็นต้นไปค่ะ");
+    return;
+  }
 
-  if(Number(standardRooms)===0 && Number(superiorRooms)===0){
+  if (Number(standardRooms) === 0 && Number(superiorRooms) === 0) {
     showStatus("กรุณาเลือกจำนวนห้องที่ต้องการค่ะ");
     return;
   }
+
   if (!validateRoomCapacity(
-  guests,
-  standardRooms,
-  superiorRooms
-)) {
-  submitBtn.disabled = false;
-  return;
-}
-  checkExtraMattressWarning(
-  guests,
-  standardRooms,
-  superiorRooms
-);
-  if (!validateRoomCapacity()) {
-  return;
-}
+    guests,
+    standardRooms,
+    superiorRooms
+  )) {
+    submitBtn.disabled = false;
+    return;
+  }
+
   const totalRooms =
-  Number(standardRooms) + Number(superiorRooms);
+    Number(standardRooms) + Number(superiorRooms);
 
-if (totalRooms > Number(guests)) {
-  showStatus(
-    "จำนวนห้องที่เลือกมากกว่าจำนวนผู้เข้าพักค่ะ\n" +
-    "กรุณาตรวจสอบอีกครั้งก่อนส่งคำขอจองค่ะ"
-  );
-  return;
-}
+  if (totalRooms > Number(guests)) {
+    showStatus(
+      "จำนวนห้องที่เลือกมากกว่าจำนวนผู้เข้าพักค่ะ\n" +
+      "กรุณาตรวจสอบอีกครั้งก่อนส่งคำขอจองค่ะ"
+    );
+    return;
+  }
 
-  if(!phone){
+  if (needsExtraMattress(
+    guests,
+    standardRooms,
+    superiorRooms
+  )) {
+    const confirmed = confirm(
+      "จำนวนผู้เข้าพักเกินจำนวนเตียงปกติค่ะ\n\n" +
+      "ห้อง Superior จะมีค่าเสริมฟูก 200 บาท / ห้อง / คืน\n\n" +
+      "ต้องการดำเนินการต่อหรือไม่?"
+    );
+
+    if (!confirmed) {
+      submitBtn.disabled = false;
+      return;
+    }
+  }
+
+  if (!phone) {
     showStatus("กรุณากรอกเบอร์โทรศัพท์ค่ะ");
     return;
   }
 
-  const nights=Math.ceil(
-    (parseDateInput(checkoutDate)-parseDateInput(checkinDate)) /
-    (1000*60*60*24)
+  const nights = Math.ceil(
+    (parseDateInput(checkoutDate) - parseDateInput(checkinDate)) /
+    (1000 * 60 * 60 * 24)
   );
 
-  const data={
-    userId:userId,
-    checkinDate:checkinDate,
-    checkoutDate:checkoutDate,
-    nights:nights,
-    guests:guests,
-    standardRooms:standardRooms,
-    superiorRooms:superiorRooms,
-    phone:phone
+  const data = {
+    userId: userId,
+    checkinDate: checkinDate,
+    checkoutDate: checkoutDate,
+    nights: nights,
+    guests: guests,
+    standardRooms: standardRooms,
+    superiorRooms: superiorRooms,
+    phone: phone
   };
 
-  submitBtn.disabled=true;
+  submitBtn.disabled = true;
   showStatus("กำลังส่งคำขอจอง...");
 
-  try{
-    await fetch(API_URL,{
-      method:"POST",
-      mode:"no-cors",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(data)
+  try {
+    await fetch(API_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data)
     });
 
-    showStatus("ส่งคำขอเรียบร้อยแล้วค่ะ 😊\nทีมงานจะตรวจสอบและติดต่อกลับโดยเร็วที่สุดค่ะ");
+    showStatus(
+      "ส่งคำขอเรียบร้อยแล้วค่ะ 😊\n" +
+      "ระบบได้ตรวจสอบห้องว่างเบื้องต้นเรียบร้อยแล้ว\n" +
+      "ทีมงานจะติดต่อกลับเพื่อยืนยันรายละเอียดค่ะ"
+    );
 
-  }catch(err){
+  } catch(err) {
     showStatus("ส่งข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้งค่ะ");
-    submitBtn.disabled=false;
+    submitBtn.disabled = false;
   }
 }
 
