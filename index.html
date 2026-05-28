@@ -212,28 +212,30 @@ function displayRoomLeft(left, guests) {
 }
   
 async function checkAvailability(){
-  const checkBtn=document.getElementById("checkBtn");
-  const checkinDate=document.getElementById("checkinDate").value;
-  const checkoutDate=document.getElementById("checkoutDate").value;
-  const guests=document.getElementById("guests").value;
-  const today = toDateInputValue(new Date());
-
-if (checkinDate < today) {
-  showStatus("กรุณาเลือกวันที่เข้าพักตั้งแต่วันนี้เป็นต้นไปค่ะ");
-  return;
-}
+  const checkBtn = document.getElementById("checkBtn");
+  const checkinDate = document.getElementById("checkinDate").value;
+  const checkoutDate = document.getElementById("checkoutDate").value;
+  const guests = document.getElementById("guests").value;
 
   if(!checkinDate || !checkoutDate || !guests){
     showStatus("กรุณาเลือกวันที่และจำนวนผู้เข้าพักค่ะ");
     return;
   }
 
-  if(checkoutDate<=checkinDate){
+  const today = toDateInputValue(new Date());
+
+  if(checkinDate < today){
+    showStatus("กรุณาเลือกวันที่เข้าพักตั้งแต่วันนี้เป็นต้นไปค่ะ");
+    checkBtn.disabled = false;
+    return;
+  }
+
+  if(checkoutDate <= checkinDate){
     showStatus("กรุณาเลือกวันที่เช็คเอาท์หลังวันที่เข้าพักค่ะ");
     return;
   }
 
-  checkBtn.disabled=true;
+  checkBtn.disabled = true;
   showStatus("กำลังเช็คห้องว่าง...");
 
   try{
@@ -244,39 +246,38 @@ if (checkinDate < today) {
       "&checkoutDate=" + encodeURIComponent(checkoutDate) +
       "&guests=" + encodeURIComponent(guests);
 
-    const res=await fetch(url);
-    const data=await res.json();
+    const res = await fetch(url);
+    const data = await res.json();
 
     if(!data.success){
       showStatus("ยังไม่สามารถเช็คห้องว่างได้ กรุณาลองใหม่อีกครั้งค่ะ");
-      checkBtn.disabled=false;
+      checkBtn.disabled = false;
       return;
     }
 
-    lastAvailability=data;
+    lastAvailability = data;
 
     document.getElementById("standardInfo").innerHTML =
-      `${displayRoomLeft(data.standardLeft, guests)}<br>ราคา ${data.standardPrice} บาท / ห้อง / คืน`
-      (data.recommended==="standard" ? `<br><span class="badge">แนะนำสำหรับคุณ</span>` : "");
+      `${displayRoomLeft(data.standardLeft, guests)}<br>ราคา ${data.standardPrice} บาท / ห้อง / คืน` +
+      (data.recommended === "standard" ? `<br><span class="badge">แนะนำสำหรับคุณ</span>` : "");
 
     document.getElementById("superiorInfo").innerHTML =
-      `${displayRoomLeft(data.superiorLeft, guests)}<br>ราคา ${data.superiorPrice} บาท / ห้อง / คืน`
-      (data.recommended==="superior" ? `<br><span class="badge">แนะนำสำหรับคุณ</span>` : "");
+      `${displayRoomLeft(data.superiorLeft, guests)}<br>ราคา ${data.superiorPrice} บาท / ห้อง / คืน` +
+      (data.recommended === "superior" ? `<br><span class="badge">แนะนำสำหรับคุณ</span>` : "");
 
-    fillRoomSelect("standardRooms",data.standardLeft,"ห้องมาตรฐาน");
-    fillRoomSelect("superiorRooms",data.superiorLeft,"ห้อง Superior");
+    fillRoomSelect("standardRooms", data.standardLeft, "ห้องมาตรฐาน");
+    fillRoomSelect("superiorRooms", data.superiorLeft, "ห้อง Superior");
 
     document.getElementById("roomSection").classList.remove("hidden");
 
-    showStatus(`พบข้อมูลห้องว่างค่ะ 😊\nเลือกประเภทห้องและจำนวนห้องที่ต้องการได้เลยค่ะ`);
+    showStatus("พบข้อมูลห้องว่างค่ะ 😊\nเลือกประเภทห้องและจำนวนห้องที่ต้องการได้เลยค่ะ");
 
   }catch(err){
     showStatus("เช็คห้องว่างไม่สำเร็จ กรุณาลองใหม่อีกครั้งค่ะ");
   }
 
-  checkBtn.disabled=false;
+  checkBtn.disabled = false;
 }
-
 function validateRoomCapacity(
   guests,
   standardRooms,
