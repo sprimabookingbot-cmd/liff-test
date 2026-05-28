@@ -274,6 +274,9 @@ async function submitBooking(){
     showStatus("กรุณาเลือกจำนวนห้องที่ต้องการค่ะ");
     return;
   }
+  if (!validateRoomCapacity()) {
+  return;
+}
   const totalRooms =
   Number(standardRooms) + Number(superiorRooms);
 
