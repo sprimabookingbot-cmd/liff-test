@@ -3,113 +3,35 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
 <title>S’Prima Booking</title>
-
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
 <style>
-body {
-  margin: 0;
-  background: #f5f5f5;
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
-  color: #222;
-}
-
-.container {
-  max-width: 520px;
-  margin: auto;
-  padding: 24px;
-}
-
-.card {
-  background: #fff;
-  border-radius: 22px;
-  padding: 26px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-}
-
-h1 {
-  margin: 0;
-  font-size: 34px;
-  line-height: 1.15;
-  font-weight: 800;
-}
-
-.subtitle {
-  margin-top: 8px;
-  color: #666;
-  line-height: 1.5;
-  font-size: 18px;
-}
-
-.section-title {
-  margin-top: 30px;
-  margin-bottom: 10px;
-  font-size: 20px;
-  font-weight: 800;
-}
-
-input,
-select {
-  width: 100%;
-  box-sizing: border-box;
-  border: 1.5px solid #ddd;
-  border-radius: 18px;
-  padding: 18px;
-  font-size: 20px;
-  background: #fff;
-  margin-bottom: 18px;
-}
-
-button {
-  width: 100%;
-  border: none;
-  border-radius: 20px;
-  background: #06C755;
-  color: #fff;
-  font-size: 24px;
-  padding: 20px;
-  font-weight: 800;
-  margin-top: 14px;
-}
-
-button:disabled {
-  opacity: 0.55;
-}
-
-#status {
-  margin-top: 22px;
-  padding: 18px;
-  border-radius: 18px;
-  background: #effcf3;
-  border: 1px solid #c9edd5;
-  white-space: pre-line;
-  font-size: 20px;
-  line-height: 1.6;
-  font-weight: 700;
-  display: none;
-}
-
-.note {
-  margin-top: 24px;
-  font-size: 16px;
-  color: #777;
-  line-height: 1.6;
-}
+body{margin:0;background:#f5f5f5;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;color:#222}
+.container{max-width:520px;margin:auto;padding:24px}
+.card{background:#fff;border-radius:22px;padding:26px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+h1{margin:0;font-size:34px;line-height:1.15;font-weight:800}
+.subtitle{margin-top:8px;color:#666;line-height:1.5;font-size:18px}
+.section-title{margin-top:28px;margin-bottom:10px;font-size:20px;font-weight:800}
+input,select{width:100%;box-sizing:border-box;border:1.5px solid #ddd;border-radius:18px;padding:18px;font-size:20px;background:#fff;margin-bottom:16px}
+button{width:100%;border:none;border-radius:20px;background:#06C755;color:#fff;font-size:24px;padding:20px;font-weight:800;margin-top:14px}
+button:disabled{opacity:.55}
+#status{margin-top:22px;padding:18px;border-radius:18px;background:#effcf3;border:1px solid #c9edd5;white-space:pre-line;font-size:20px;line-height:1.6;font-weight:700;display:none}
+.note{margin-top:24px;font-size:16px;color:#777;line-height:1.6}
+.room-card{border:1.5px solid #ddd;border-radius:18px;padding:18px;margin-top:16px;background:#fff}
+.room-title{font-size:22px;font-weight:800;margin-bottom:8px}
+.room-info{font-size:17px;line-height:1.6;color:#555}
+.badge{display:inline-block;margin-top:8px;padding:6px 10px;border-radius:999px;background:#e9fff0;color:#06A84F;font-size:14px;font-weight:800}
+.soldout{opacity:.45}
+.hidden{display:none}
 </style>
 </head>
 
 <body>
-
 <div class="container">
   <div class="card">
-
     <h1>S’Prima Hostel</h1>
-
-    <div class="subtitle">
-      เช็คห้องว่างและส่งคำขอจองห้องพัก
-    </div>
+    <div class="subtitle">เช็คห้องว่างและส่งคำขอจองห้องพัก</div>
 
     <div class="section-title">วันที่เข้าพัก</div>
     <input type="date" id="checkinDate">
@@ -131,154 +53,265 @@ button:disabled {
       <option value="มากกว่า 8">มากกว่า 8 ท่าน</option>
     </select>
 
-    <div class="section-title">เบอร์โทรศัพท์</div>
-    <input type="tel" id="phone" placeholder="เช่น 087xxxxxxx">
+    <button id="checkBtn" onclick="checkAvailability()">เช็คห้องว่าง</button>
 
-    <button id="submitBtn" onclick="submitForm()">
-      เช็คห้องว่าง
-    </button>
+    <div id="roomSection" class="hidden">
+      <div class="section-title">เลือกห้องพัก</div>
+
+      <div id="standardCard" class="room-card">
+        <div class="room-title">ห้องมาตรฐาน</div>
+        <div id="standardInfo" class="room-info"></div>
+        <select id="standardRooms"></select>
+      </div>
+
+      <div id="superiorCard" class="room-card">
+        <div class="room-title">ห้อง Superior</div>
+        <div id="superiorInfo" class="room-info"></div>
+        <select id="superiorRooms"></select>
+      </div>
+
+      <div class="section-title">เบอร์โทรศัพท์</div>
+      <input type="tel" id="phone" placeholder="เช่น 087xxxxxxx">
+
+      <button id="submitBtn" onclick="submitBooking()">ส่งคำขอจอง</button>
+    </div>
 
     <div id="status"></div>
 
     <div class="note">
       ระบบจะตรวจสอบห้องว่างเบื้องต้น และทีมงานจะติดต่อกลับเพื่อยืนยันอีกครั้งค่ะ
     </div>
-
   </div>
 </div>
 
 <script>
 const LIFF_ID = "2010199464-Ylx6zXrL";
-
-const API_URL =
-"https://script.google.com/macros/s/AKfycbwRBXDsNOME9GcqJ1gt4gPLx9z4pAxtWa0JgPXO-NnFZK_3F10AfV16S3Q8mJ9o1wjF/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwRBXDsNOME9GcqJ1gt4gPLx9z4pAxtWa0JgPXO-NnFZK_3F10AfV16S3Q8mJ9o1wjF/exec";
 
 let userId = "";
+let lastAvailability = null;
 
-function toDateInputValue(date) {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
+function toDateInputValue(date){
+  const y=date.getFullYear();
+  const m=String(date.getMonth()+1).padStart(2,"0");
+  const d=String(date.getDate()).padStart(2,"0");
   return `${y}-${m}-${d}`;
 }
 
-function parseDateInput(value) {
-  const parts = value.split("-");
-  return new Date(
-    Number(parts[0]),
-    Number(parts[1]) - 1,
-    Number(parts[2])
-  );
+function parseDateInput(value){
+  const p=value.split("-");
+  return new Date(Number(p[0]),Number(p[1])-1,Number(p[2]));
 }
 
-function addDays(dateString, days) {
-  const d = parseDateInput(dateString);
-  d.setDate(d.getDate() + days);
+function addDays(dateString,days){
+  const d=parseDateInput(dateString);
+  d.setDate(d.getDate()+days);
   return toDateInputValue(d);
 }
 
-function showStatus(message) {
-  const status = document.getElementById("status");
-  status.style.display = "block";
-  status.innerText = message;
+function showStatus(message){
+  const status=document.getElementById("status");
+  status.style.display="block";
+  status.innerText=message;
 }
 
-function setupDates() {
-  const checkin = document.getElementById("checkinDate");
-  const checkout = document.getElementById("checkoutDate");
+function hideStatus(){
+  const status=document.getElementById("status");
+  status.style.display="none";
+  status.innerText="";
+}
 
-  const today = toDateInputValue(new Date());
+function setupDates(){
+  const checkin=document.getElementById("checkinDate");
+  const checkout=document.getElementById("checkoutDate");
+  const today=toDateInputValue(new Date());
 
-  checkin.min = today;
-  checkin.value = today;
+  checkin.min=today;
+  checkin.value=today;
 
-  const tomorrow = addDays(today, 1);
-  checkout.min = tomorrow;
-  checkout.value = tomorrow;
+  checkout.min=addDays(today,1);
+  checkout.value=addDays(today,1);
 
-  checkin.addEventListener("change", function () {
-    if (!checkin.value) return;
-
-    const minCheckout = addDays(checkin.value, 1);
-    checkout.min = minCheckout;
-
-    if (!checkout.value || checkout.value <= checkin.value) {
-      checkout.value = minCheckout;
+  checkin.addEventListener("change",function(){
+    const minCheckout=addDays(checkin.value,1);
+    checkout.min=minCheckout;
+    if(!checkout.value || checkout.value<=checkin.value){
+      checkout.value=minCheckout;
     }
+    resetRooms();
   });
+
+  checkout.addEventListener("change",resetRooms);
+  document.getElementById("guests").addEventListener("change",resetRooms);
 }
 
-async function main() {
+function resetRooms(){
+  document.getElementById("roomSection").classList.add("hidden");
+  lastAvailability=null;
+  hideStatus();
+}
+
+function fillRoomSelect(selectId,left,label){
+  const select=document.getElementById(selectId);
+  select.innerHTML="";
+
+  const zero=document.createElement("option");
+  zero.value="0";
+  zero.textContent="ไม่เลือก";
+  select.appendChild(zero);
+
+  const max=Math.min(Number(left || 0),5);
+
+  for(let i=1;i<=max;i++){
+    const opt=document.createElement("option");
+    opt.value=String(i);
+    opt.textContent=i + " ห้อง";
+    select.appendChild(opt);
+  }
+
+  if(max===0){
+    const opt=document.createElement("option");
+    opt.value="0";
+    opt.textContent=label + "เต็มแล้ว";
+    select.innerHTML="";
+    select.appendChild(opt);
+    select.disabled=true;
+  }else{
+    select.disabled=false;
+  }
+}
+
+async function main(){
   setupDates();
 
-  try {
-    await liff.init({
-      liffId: LIFF_ID
-    });
+  try{
+    await liff.init({liffId:LIFF_ID});
 
-    if (!liff.isLoggedIn()) {
+    if(!liff.isLoggedIn()){
       liff.login();
       return;
     }
 
-    const profile = await liff.getProfile();
-    userId = profile.userId || "";
+    const profile=await liff.getProfile();
+    userId=profile.userId || "";
 
-  } catch (err) {
+  }catch(err){
     showStatus("ไม่สามารถเชื่อมต่อ LINE ได้ กรุณาปิดแล้วเปิดใหม่อีกครั้งค่ะ");
   }
 }
 
-async function submitForm() {
-  const submitBtn = document.getElementById("submitBtn");
+async function checkAvailability(){
+  const checkBtn=document.getElementById("checkBtn");
+  const checkinDate=document.getElementById("checkinDate").value;
+  const checkoutDate=document.getElementById("checkoutDate").value;
+  const guests=document.getElementById("guests").value;
 
-  const checkinDate = document.getElementById("checkinDate").value;
-  const checkoutDate = document.getElementById("checkoutDate").value;
-  const guests = document.getElementById("guests").value;
-  const phone = document.getElementById("phone").value;
-
-  if (!checkinDate || !checkoutDate || !guests || !phone) {
-    showStatus("กรุณากรอกข้อมูลให้ครบค่ะ");
+  if(!checkinDate || !checkoutDate || !guests){
+    showStatus("กรุณาเลือกวันที่และจำนวนผู้เข้าพักค่ะ");
     return;
   }
 
-  if (checkoutDate <= checkinDate) {
+  if(checkoutDate<=checkinDate){
     showStatus("กรุณาเลือกวันที่เช็คเอาท์หลังวันที่เข้าพักค่ะ");
     return;
   }
 
-const nights = Math.ceil(
-  (parseDateInput(checkoutDate) - parseDateInput(checkinDate)) /
-  (1000 * 60 * 60 * 24)
-);
+  checkBtn.disabled=true;
+  showStatus("กำลังเช็คห้องว่าง...");
 
-  const data = {
-    userId: userId,
-    checkinDate: checkinDate,
-    checkoutDate: checkoutDate,
-    nights: nights,
-    guests: guests,
-    phone: phone
+  try{
+    const url =
+      API_URL +
+      "?action=availability" +
+      "&checkinDate=" + encodeURIComponent(checkinDate) +
+      "&checkoutDate=" + encodeURIComponent(checkoutDate) +
+      "&guests=" + encodeURIComponent(guests);
+
+    const res=await fetch(url);
+    const data=await res.json();
+
+    if(!data.success){
+      showStatus("ยังไม่สามารถเช็คห้องว่างได้ กรุณาลองใหม่อีกครั้งค่ะ");
+      checkBtn.disabled=false;
+      return;
+    }
+
+    lastAvailability=data;
+
+    document.getElementById("standardInfo").innerHTML =
+      `เหลือ ${data.standardLeft} ห้อง<br>ราคา ${data.standardPrice} บาท / ห้อง / คืน` +
+      (data.recommended==="standard" ? `<br><span class="badge">แนะนำสำหรับคุณ</span>` : "");
+
+    document.getElementById("superiorInfo").innerHTML =
+      `เหลือ ${data.superiorLeft} ห้อง<br>ราคา ${data.superiorPrice} บาท / ห้อง / คืน` +
+      (data.recommended==="superior" ? `<br><span class="badge">แนะนำสำหรับคุณ</span>` : "");
+
+    fillRoomSelect("standardRooms",data.standardLeft,"ห้องมาตรฐาน");
+    fillRoomSelect("superiorRooms",data.superiorLeft,"ห้อง Superior");
+
+    document.getElementById("roomSection").classList.remove("hidden");
+
+    showStatus(`พบข้อมูลห้องว่างค่ะ 😊\nเลือกประเภทห้องและจำนวนห้องที่ต้องการได้เลยค่ะ`);
+
+  }catch(err){
+    showStatus("เช็คห้องว่างไม่สำเร็จ กรุณาลองใหม่อีกครั้งค่ะ");
+  }
+
+  checkBtn.disabled=false;
+}
+
+async function submitBooking(){
+  const submitBtn=document.getElementById("submitBtn");
+
+  const checkinDate=document.getElementById("checkinDate").value;
+  const checkoutDate=document.getElementById("checkoutDate").value;
+  const guests=document.getElementById("guests").value;
+  const phone=document.getElementById("phone").value;
+  const standardRooms=document.getElementById("standardRooms").value || "0";
+  const superiorRooms=document.getElementById("superiorRooms").value || "0";
+
+  if(Number(standardRooms)===0 && Number(superiorRooms)===0){
+    showStatus("กรุณาเลือกจำนวนห้องที่ต้องการค่ะ");
+    return;
+  }
+
+  if(!phone){
+    showStatus("กรุณากรอกเบอร์โทรศัพท์ค่ะ");
+    return;
+  }
+
+  const nights=Math.ceil(
+    (parseDateInput(checkoutDate)-parseDateInput(checkinDate)) /
+    (1000*60*60*24)
+  );
+
+  const data={
+    userId:userId,
+    checkinDate:checkinDate,
+    checkoutDate:checkoutDate,
+    nights:nights,
+    guests:guests,
+    standardRooms:standardRooms,
+    superiorRooms:superiorRooms,
+    phone:phone
   };
 
-  submitBtn.disabled = true;
-  showStatus("กำลังตรวจสอบห้องว่าง...");
+  submitBtn.disabled=true;
+  showStatus("กำลังส่งคำขอจอง...");
 
-  try {
-    await fetch(API_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
+  try{
+    await fetch(API_URL,{
+      method:"POST",
+      mode:"no-cors",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(data)
     });
 
     showStatus("ส่งคำขอเรียบร้อยแล้วค่ะ 😊\nทีมงานจะตรวจสอบและติดต่อกลับโดยเร็วที่สุดค่ะ");
 
-  } catch (err) {
+  }catch(err){
     showStatus("ส่งข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้งค่ะ");
-    submitBtn.disabled = false;
+    submitBtn.disabled=false;
   }
 }
 
