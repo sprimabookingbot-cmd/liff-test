@@ -260,6 +260,30 @@ async function checkAvailability(){
   checkBtn.disabled=false;
 }
 
+function validateRoomCapacity(
+  guests,
+  standardRooms,
+  superiorRooms
+) {
+
+  const capacity =
+    Number(standardRooms) * 2 +
+    Number(superiorRooms) * 3;
+
+  if (capacity < Number(guests)) {
+
+    showStatus(
+      "จำนวนห้องที่เลือกยังรองรับผู้เข้าพักไม่พอค่ะ\n\n" +
+      "ห้องมาตรฐานพักได้สูงสุด 2 ท่าน\n" +
+      "ห้อง Superior พักได้สูงสุด 3 ท่าน โดยท่านที่ 3 มีค่าเสริมฟูก 200 บาทค่ะ"
+    );
+
+    return false;
+  }
+
+  return true;
+}
+  
 async function submitBooking(){
   const submitBtn=document.getElementById("submitBtn");
 
@@ -274,6 +298,14 @@ async function submitBooking(){
     showStatus("กรุณาเลือกจำนวนห้องที่ต้องการค่ะ");
     return;
   }
+  if (!validateRoomCapacity(
+  guests,
+  standardRooms,
+  superiorRooms
+)) {
+  submitBtn.disabled = false;
+  return;
+}
   if (!validateRoomCapacity()) {
   return;
 }
