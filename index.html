@@ -162,6 +162,7 @@ const LIFF_ID = "2010199464-Ylx6zXrL";
 const API_URL = "https://script.google.com/macros/s/AKfycbwRBXDsNOME9GcqJ1gt4gPLx9z4pAxtWa0JgPXO-NnFZK_3F10AfV16S3Q8mJ9o1wjF/exec";
 
 let userId = "";
+let userName = "";
 let lastAvailability = null;
 
 function toDateInputValue(date){
@@ -267,6 +268,7 @@ async function main(){
 
     const profile=await liff.getProfile();
     userId=profile.userId || "";
+    userName = profile.displayName || "";
 
   }catch(err){
     showStatus("ไม่สามารถเชื่อมต่อ LINE ได้ กรุณาปิดแล้วเปิดใหม่อีกครั้งค่ะ");
@@ -467,6 +469,7 @@ async function submitBooking(){
 
   const data = {
     userId: userId,
+    userName: userName,
     checkinDate: checkinDate,
     checkoutDate: checkoutDate,
     nights: nights,
