@@ -143,6 +143,16 @@ button{
         <select id="superiorRooms"></select>
       </div>
 
+      <div class="section-title">เวลาที่คาดว่าจะเข้าพัก</div>
+
+      <select id="arrivalTime">
+        <option value="">เลือกช่วงเวลา</option>
+        <option value="ก่อน 18:00">ก่อน 18:00 น.</option>
+        <option value="18:00-22:00">18:00 - 22:00 น.</option>
+        <option value="หลัง 22:00">หลัง 22:00 น.</option>
+        <option value="ยังไม่แน่ใจ">ยังไม่แน่ใจ</option>
+      </select>
+      
       <div class="section-title">เบอร์โทรศัพท์</div>
       <input type="tel" id="phone" placeholder="เช่น 087xxxxxxx">
 
@@ -405,6 +415,7 @@ async function submitBooking(){
   const checkoutDate = document.getElementById("checkoutDate").value;
   const guests = document.getElementById("guests").value;
   const phone = document.getElementById("phone").value;
+  const arrivalTime = document.getElementById("arrivalTime").value;
   const standardRooms = document.getElementById("standardRooms").value || "0";
   const superiorRooms = document.getElementById("superiorRooms").value || "0";
 
@@ -457,6 +468,13 @@ async function submitBooking(){
     }
   }
 
+  if (!arrivalTime) {
+  showStatus(
+    "กรุณาเลือกเวลาที่คาดว่าจะเข้าพักค่ะ"
+  );
+  return;
+}
+  
   if (!phone) {
     showStatus("กรุณากรอกเบอร์โทรศัพท์ค่ะ");
     return;
@@ -476,7 +494,8 @@ async function submitBooking(){
     guests: guests,
     standardRooms: standardRooms,
     superiorRooms: superiorRooms,
-    phone: phone
+    phone: phone,
+    arrivalTime: arrivalTime
   };
 
   submitBtn.disabled = true;
