@@ -153,6 +153,9 @@ button{
         <option value="ยังไม่แน่ใจ">ยังไม่แน่ใจ</option>
       </select>
       
+      <div class="section-title">ชื่อผู้เข้าพัก</div>
+      <input type="text" id="guestName" placeholder="เช่น อนุรักษ์ หรือ Anurak Srisuk">
+
       <div class="section-title">เบอร์โทรศัพท์</div>
       <input type="tel" id="phone" placeholder="เช่น 087xxxxxxx">
 
@@ -414,7 +417,8 @@ async function submitBooking(){
   const checkinDate = document.getElementById("checkinDate").value;
   const checkoutDate = document.getElementById("checkoutDate").value;
   const guests = document.getElementById("guests").value;
-  const phone = document.getElementById("phone").value;
+  const guestName = document.getElementById("guestName").value.trim();
+  const phone = document.getElementById("phone").value.trim();
   const arrivalTime = document.getElementById("arrivalTime").value;
   const standardRooms = document.getElementById("standardRooms").value || "0";
   const superiorRooms = document.getElementById("superiorRooms").value || "0";
@@ -474,6 +478,11 @@ async function submitBooking(){
   );
   return;
 }
+
+  if (!guestName) {
+    showStatus("กรุณากรอกชื่อผู้เข้าพักค่ะ");
+    return;
+  }
   
   if (!phone) {
     showStatus("กรุณากรอกเบอร์โทรศัพท์ค่ะ");
@@ -488,6 +497,7 @@ async function submitBooking(){
   const data = {
     userId: userId,
     userName: userName,
+    guestName: guestName,
     checkinDate: checkinDate,
     checkoutDate: checkoutDate,
     nights: nights,
