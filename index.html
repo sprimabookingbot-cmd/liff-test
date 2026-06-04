@@ -100,11 +100,22 @@ button{
 
 .promo-toggle{
   margin-top:18px;
+  padding:14px 16px;
+  border-radius:16px;
+  background:#f7fff9;
+  border:1.5px dashed #9be7b7;
   color:#06A84F;
-  font-size:16px;
+  font-size:17px;
   font-weight:800;
   cursor:pointer;
   user-select:none;
+  line-height:1.35;
+}
+.promo-toggle .promo-small{
+  margin-top:3px;
+  color:#555;
+  font-size:14px;
+  font-weight:700;
 }
 .promo-box{
   margin-top:10px;
@@ -198,7 +209,10 @@ button{
         <select id="superiorRooms"></select>
       </div>
 
-      <div class="promo-toggle" onclick="togglePromoBox()">มีโค้ดส่วนลด?</div>
+      <div class="promo-toggle" onclick="togglePromoBox()">
+        🏷️ มีโค้ดส่วนลด?
+        <div class="promo-small">กดที่นี่เพื่อกรอกรหัส</div>
+      </div>
       <div id="promoBox" class="promo-box hidden">
         <div class="promo-row">
           <input type="text" id="promoCode" placeholder="กรอกโค้ดส่วนลด">
