@@ -170,12 +170,12 @@ button{
 <div class="container">
   <div class="card">
     <h1>S’Prima Hostel</h1>
-    <div class="subtitle">เช็คห้องว่างและส่งคำขอจองห้องพัก</div>
+    <div class="subtitle">ตรวจสอบห้องว่างและราคา</div>
 
     <div class="section-title">วันที่เข้าพัก</div>
     <input type="date" id="checkinDate">
 
-    <div class="section-title">วันที่เช็คเอาท์</div>
+    <div class="section-title">วันที่ออก</div>
     <input type="date" id="checkoutDate">
 
     <div class="section-title">จำนวนผู้เข้าพัก</div>
@@ -192,7 +192,7 @@ button{
       <option value="มากกว่า 8">มากกว่า 8 ท่าน</option>
     </select>
 
-    <button id="checkBtn" onclick="checkAvailability()">เช็คห้องว่าง</button>
+    <button id="checkBtn" onclick="checkAvailability()">ดูห้องว่าง</button>
 
     <div id="roomSection" class="hidden">
       <div class="section-title">เลือกห้องพัก</div>
@@ -246,7 +246,7 @@ button{
     <div id="status"></div>
 
     <div class="note">
-      ระบบจะตรวจสอบห้องว่างเบื้องต้น และทีมงานจะติดต่อกลับเพื่อยืนยันอีกครั้งค่ะ
+      ระบบจะแสดงห้องพักที่ว่างสำหรับวันที่เลือก
     </div>
   </div>
 </div>
@@ -555,12 +555,12 @@ async function checkAvailability(){
   }
 
   if(checkoutDate <= checkinDate){
-    showStatus("กรุณาเลือกวันที่เช็คเอาท์หลังวันที่เข้าพักค่ะ");
+    showStatus("กรุณาเลือกวันที่ออกหลังวันที่เข้าพักค่ะ");
     return;
   }
 
   checkBtn.disabled = true;
-  showStatus("กำลังเช็คห้องว่าง...");
+  showStatus("กำลังตรวจสอบห้องว่าง...");
 
   try{
     const url =
@@ -574,7 +574,7 @@ async function checkAvailability(){
     const data = await res.json();
 
     if(!data.success){
-      showStatus("ยังไม่สามารถเช็คห้องว่างได้ กรุณาลองใหม่อีกครั้งค่ะ");
+      showStatus("ยังไม่สามารถดูห้องว่างได้ กรุณาลองใหม่อีกครั้งค่ะ");
       checkBtn.disabled = false;
       return;
     }
@@ -611,7 +611,7 @@ async function checkAvailability(){
     showStatus("พบข้อมูลห้องว่างค่ะ 😊\nเลือกประเภทห้องและจำนวนห้องที่ต้องการได้เลยค่ะ");
 
   }catch(err){
-    showStatus("เช็คห้องว่างไม่สำเร็จ กรุณาลองใหม่อีกครั้งค่ะ");
+    showStatus("ดูห้องว่างไม่สำเร็จ กรุณาลองใหม่อีกครั้งค่ะ");
   }
 
   checkBtn.disabled = false;
@@ -771,9 +771,8 @@ async function submitBooking(){
     });
 
     showStatus(
-      "ส่งคำขอเรียบร้อยแล้วค่ะ 😊\n" +
-      "ระบบได้ตรวจสอบห้องว่างเบื้องต้นเรียบร้อยแล้ว\n" +
-      "ทีมงานจะติดต่อกลับเพื่อยืนยันรายละเอียดค่ะ"
+      "ส่งคำขอจองเรียบร้อยแล้วค่ะ 😊\n" +
+      "ทีมงานจะตรวจสอบรายละเอียดและติดต่อกลับเพื่อยืนยันการจองค่ะ"
     );
 
   } catch(err) {
